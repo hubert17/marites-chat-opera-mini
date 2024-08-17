@@ -1,0 +1,261 @@
+﻿@model MessageViewModel
+@{
+    Layout = null;
+    string messageUrl = $"?sender={@Model.Sender}&channelCode={@Model.ChannelCode}";
+    bool hasUnreadMessages = Model.UnreadMessages.Any();
+    var operaMiniQs = ViewBag.OperaMini != "0" ? Html.Raw("&operaMini=1") : Html.Raw("");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marites Chat</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #000;
+        }
+
+        #chat-container {
+            background-color: #fff;
+            margin: 0 auto;
+            padding: 0px 5px 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-field, .button, .label {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .input-field {
+            border: 1px solid #ccc;
+            margin: 3px 0 2px;
+        }
+
+        .button {
+            border: none;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+        }
+
+        .primary-button {
+            background-color: #2196f3;
+        }
+
+            .primary-button:focus {
+                outline: 3px solid #1a78c2;
+                background-color: #1c80cf;
+                font-size: 1.1em;
+                font-weight: bold;
+            }
+
+        .secondary-button {
+            background-color: #9c27b0;
+            padding: 6px;
+        }
+
+            .secondary-button:focus {
+                outline: 3px solid #751d84;
+                background-color: #852196;
+            }
+
+        .error-button {
+            background-color: white;
+            color: #e51c23;
+            border: 2px solid #e51c23;
+        }
+
+            .error-button:hover, .error-button:focus {
+                background-color: #e51c23;
+                color: white;
+                outline: none;
+            }
+
+        .label {
+            background-color: dimgrey;
+            color: white;
+            border-radius: 0px;
+        }
+
+            .label span {
+                display: block;
+            }
+
+        .message {
+            padding: 5px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+            .message:last-of-type {
+                border-bottom: none;
+            }
+
+        .message-list {
+            border: 1px solid #ccc;
+            padding: 3px;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="chat-container">
+        <form action="/chat/index?@operaMiniQs" method="post">
+            @{
+                int i = -1;
+            }
+            <div class="label button" id="unread-label" style="@(hasUnreadMessages ? "" : "display:none;")">
+                <span><b>New Message</b></span>
+                <span id="latest-date">
+                    @if (hasUnreadMessages)
+                    {
+                        @Model.UnreadMessages.LastOrDefault()?.SendDate.ToString("M-d-yy h:mmtt")
+                    }
+                </span>
+            </div>
+            <div id="unread-messages" style="@(hasUnreadMessages ? "" : "display:none;")">
+                @foreach (var message in Model.UnreadMessages)
+                {
+                    i++;
+                    <div class="message">
+                        <a href="#u@(message.Id)">
+                            [@(i + 1)] @message.Sender: @message.MessageText
+                        </a>
+                    </div>
+                    <input type="hidden" name="unreadMessageIds[@i]" value="@message.Id" />
+                }
+            </div>
+
+            <input type="hidden" name="Sender" value="@Model.Sender" />
+            <input type="hidden" name="ChannelCode" value="@Model.ChannelCode" />
+            <label id="write-label">@(hasUnreadMessages ? "Write a reply" : "Write message"):</label>
+            <textarea rows="2" id="message-input" name="MessageText" class="input-field"></textarea>
+            <button id="send-button" type="submit" class="button primary-button" style="margin-bottom:10px;">Send</button>
+        </form>
+
+        <div class="label button" id="inbox-label">
+            <span>
+                @if (ViewBag.OperaMini == "0")
+                {
+                    <b>INBOX</b>
+                }
+                else
+                {
+                    <a href="@(messageUrl)&page=1@(operaMiniQs)" style="color:white;"><b>REFRESH INBOX</b></a>
+                }
+            </span>
+            
+            @if (Model.Messages.Any() && Model.PageNo == 1)
+            {
+                <span id="recent-date" style="@(!hasUnreadMessages ? "" : "display:none;")">@Model.Messages.FirstOrDefault().SendDate.ToManilaTime().ToString("M-d-yy h:mmtt")</span>
+            }
+            @if (Model.PageNo > 1)
+            {
+                <span>[@Model.PageNo of @Model.PageTotal]</span>
+            }
+        </div>
+
+        <div class="message-list">
+            @foreach (var message in Model.Messages)
+            {
+                <div class="message">
+                    <a href="#m@(message.Id)" id="m@(message.Id)">
+                        @(message.Sender.Equals(Model.Sender, StringComparison.OrdinalIgnoreCase) ? "Me" : message.Sender): @message.MessageText
+                    </a>
+                </div>
+            }
+        </div>
+
+        @if (Model.PageTotal > 0 && Model.PageNo != Model.PageTotal)
+        {
+            <a href="@(messageUrl)&page=@(Model.PageNo + 1)@operaMiniQs" class="button secondary-button">Older</a>
+        }
+        <a href="@(messageUrl)&page=1@(operaMiniQs)" class="button secondary-button" style="margin-top: 5px;">Recent</a>
+
+        <a href="/" id="leave-button" class="button error-button" style="margin-top:15px;">Leave Channel [@Model.ChannelCode]</a>
+    </div>
+
+
+    @if (ViewBag.MessageId != null && ViewBag.MessageId != 0)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                window.location.hash = '#m@(ViewBag.MessageId)';
+            });
+        </script>
+    }
+
+    @if (ViewBag.OperaMini == "0")
+    {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js" integrity="sha512-7SRCYIJtR6F8ocwW7UxW6wGKqbSyqREDbfCORCbGLatU0iugBLwyOXpzhkPyHIFdBO0K2VCu57fvP2Twgx1o2A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript">
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chathub")
+                .build();
+
+            connection.on("ReceiveMessage", function (sender, message, messageId, sendDate) {
+                if (sender.toLowerCase() !== '@(Model.Sender)'.toLowerCase()) {
+                    // Make the unread label and messages visible
+                    const unreadLabel = document.getElementById("unread-label");
+                    const unreadMessagesContainer = document.getElementById("unread-messages");
+                    const recentDate = document.getElementById("recent-date");
+
+                    unreadLabel.style.display = "block";
+                    unreadMessagesContainer.style.display = "block";
+                    if (recentDate) {
+                        recentDate.style.display = "none";
+                    }
+
+                    // Update the latest date
+                    document.getElementById("latest-date").textContent = sendDate;
+                    document.getElementById("write-label").textContent = "Write a reply:";
+
+                    // Determine the next index for the hidden input
+                    const lastInput = unreadMessagesContainer.querySelectorAll("input[type='hidden']");
+                    const nextIndex = (lastInput === null || lastInput.length === 0) ? 0 : lastInput.length;
+
+                    // Create and insert the hidden input
+                    const hiddenInput = `<input type="hidden" name="unreadMessageIds[${nextIndex}]" value="${messageId}" />`;
+                    unreadMessagesContainer.insertAdjacentHTML('beforeend', hiddenInput);
+
+                    const seqNo = nextIndex + 1;
+                    // Create a new message element
+                    const newMessage = `
+                                            <div class="message">
+                                                <a href="#u${messageId}">
+                                                    [${seqNo}] ${sender}: ${message}
+                                                </a>
+                                            </div>
+                                        `;
+
+                    // Insert the new message at the end of the unread messages container
+                    unreadMessagesContainer.insertAdjacentHTML('beforeend', newMessage);
+                }
+            });
+
+            connection.start().catch(function (err) {
+                console.error(err.toString());
+            });
+        </script>
+
+    }
+
+</body>
+</html>

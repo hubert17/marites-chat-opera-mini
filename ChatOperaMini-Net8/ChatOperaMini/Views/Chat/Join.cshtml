@@ -1,0 +1,111 @@
+﻿@{
+    Layout = null;
+    var operaMiniQs = ViewBag.OperaMini != "0" ? Html.Raw("&operaMini=1") : Html.Raw("");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marites Chat - Join</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #000;
+        }
+
+        #chat-container {
+            background-color: #fff;
+            margin: 0 auto;
+            padding: 0px 5px 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-field, .button, .label {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .input-field {
+            border: 1px solid #ccc;
+            margin: 3px 0 2px;
+        }
+
+        .button {
+            border: none;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+        }
+
+        .primary-button {
+            background-color: #2196f3;
+        }
+
+            .primary-button:focus {
+                outline: 3px solid #1a78c2;
+                background-color: #1c80cf;
+                font-size: 1.1em;
+                font-weight: bold;
+            }
+
+        .label {
+            background-color: #9c27b0;
+            color: white;
+            border-radius: 0px;
+        }
+
+            .label span {
+                display: block;
+            }
+
+        .operamini-label {
+            color: dimgrey;
+            text-align: center;
+            font-size:small;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="chat-container">
+        <form action="/chat/join?@(operaMiniQs)" method="post">
+            <div class="label button">
+                <span>Welcome to <b>MARITES CHAT</b></span>
+                <span>Create or join a channel</span>
+            </div>
+            <label>Username:</label>
+            <input type="text" id="message-input" name="sender" value="@ViewBag.Sender" placeholder="Username" class="input-field" />
+            <label>Channel:</label>
+            <input type="text" id="message-input" name="channelCode" value="@ViewBag.ChannelCode" placeholder="Channel" class="input-field" />
+            <button id="join-button" type="submit" class="button primary-button" style="margin-top:3px;margin-bottom:5px;">Join</button>
+        </form>
+
+        @if (TempData["Invalid"] != null && (bool)TempData["Invalid"])
+        {
+            <div class="operamini-label">
+                <span style="color:red;">Only alphabets and digits are allowed!</span>
+            </div>
+        }
+
+        @if (ViewBag.OperaMini != "0")
+        {
+            <div class="operamini-label">
+                <span><i>You are browsing in Opera Mini.</i></span>
+            </div>
+        }
+    </div>
+
+
+</body>
+</html>
