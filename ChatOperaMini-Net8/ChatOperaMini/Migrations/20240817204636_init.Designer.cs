@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatOperaMini.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240811115717_init")]
+    [Migration("20240817204636_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -55,7 +55,7 @@ namespace ChatOperaMini.Migrations
                             Id = 1,
                             ChannelCode = "public",
                             MessageText = "Hi Zoey. I'll see you later.",
-                            SendDate = new DateTime(2024, 8, 11, 19, 53, 16, 875, DateTimeKind.Local).AddTicks(6266),
+                            SendDate = new DateTime(2024, 8, 18, 4, 42, 35, 789, DateTimeKind.Local).AddTicks(2609),
                             Sender = "Mama"
                         },
                         new
@@ -63,7 +63,7 @@ namespace ChatOperaMini.Migrations
                             Id = 2,
                             ChannelCode = "public",
                             MessageText = "Hi mama, our class is about to finish.",
-                            SendDate = new DateTime(2024, 8, 11, 19, 54, 16, 875, DateTimeKind.Local).AddTicks(6280),
+                            SendDate = new DateTime(2024, 8, 18, 4, 43, 35, 789, DateTimeKind.Local).AddTicks(2622),
                             Sender = "Zoey"
                         },
                         new
@@ -71,7 +71,7 @@ namespace ChatOperaMini.Migrations
                             Id = 3,
                             ChannelCode = "public",
                             MessageText = "I am driving home.",
-                            SendDate = new DateTime(2024, 8, 11, 19, 55, 16, 875, DateTimeKind.Local).AddTicks(6281),
+                            SendDate = new DateTime(2024, 8, 18, 4, 44, 35, 789, DateTimeKind.Local).AddTicks(2623),
                             Sender = "Papa"
                         },
                         new
@@ -79,7 +79,7 @@ namespace ChatOperaMini.Migrations
                             Id = 4,
                             ChannelCode = "public",
                             MessageText = "Zoey, are you there?",
-                            SendDate = new DateTime(2024, 8, 11, 19, 57, 16, 875, DateTimeKind.Local).AddTicks(6282),
+                            SendDate = new DateTime(2024, 8, 18, 4, 46, 35, 789, DateTimeKind.Local).AddTicks(2624),
                             Sender = "Mama"
                         });
                 });
@@ -123,6 +123,27 @@ namespace ChatOperaMini.Migrations
                             MessageId = 3,
                             Readby = "Zoey"
                         });
+                });
+
+            modelBuilder.Entity("ChatOperaMini.PushSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Auth")
+                        .HasColumnType("longchar");
+
+                    b.Property<string>("Endpoint")
+                        .HasColumnType("longchar");
+
+                    b.Property<string>("P256DH")
+                        .HasColumnType("longchar");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PushSubscriptions");
                 });
 
             modelBuilder.Entity("ChatOperaMini.Models.MessageRead", b =>

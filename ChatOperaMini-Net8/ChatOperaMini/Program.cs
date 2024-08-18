@@ -14,6 +14,8 @@ var accessMdbPath = Path.Combine(builder.Environment.ContentRootPath, accessMdbF
 builder.Services.AddDbContext<AppDbContext>(option => option.UseJet($"{accessMdbFile[0]}={accessMdbPath}")); 
 #pragma warning restore CA1416 // Validate platform compatibility
 
+builder.Services.AddScoped<NotificationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

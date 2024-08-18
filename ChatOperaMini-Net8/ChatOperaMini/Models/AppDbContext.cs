@@ -23,5 +23,6 @@ public class AppDbContext : DbContext
     #region DbSets
     public DbSet<Message> Messages { get; set; }
     public DbSet<MessageRead> MessageReads { get; set; }
+    public DbSet<PushSubscription> PushSubscriptions { get; set; }
     #endregion
 }

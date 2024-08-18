@@ -30,6 +30,21 @@ namespace ChatOperaMini.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PushSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Jet:Identity", "1, 1"),
+                    Endpoint = table.Column<string>(type: "longchar", nullable: true),
+                    P256DH = table.Column<string>(type: "longchar", nullable: true),
+                    Auth = table.Column<string>(type: "longchar", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PushSubscriptions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MessageReads",
                 columns: table => new
                 {
@@ -54,10 +69,10 @@ namespace ChatOperaMini.Migrations
                 columns: new[] { "Id", "ChannelCode", "MessageText", "SendDate", "Sender" },
                 values: new object[,]
                 {
-                    { 1, "public", "Hi Zoey. I'll see you later.", new DateTime(2024, 8, 11, 19, 53, 16, 875, DateTimeKind.Local).AddTicks(6266), "Mama" },
-                    { 2, "public", "Hi mama, our class is about to finish.", new DateTime(2024, 8, 11, 19, 54, 16, 875, DateTimeKind.Local).AddTicks(6280), "Zoey" },
-                    { 3, "public", "I am driving home.", new DateTime(2024, 8, 11, 19, 55, 16, 875, DateTimeKind.Local).AddTicks(6281), "Papa" },
-                    { 4, "public", "Zoey, are you there?", new DateTime(2024, 8, 11, 19, 57, 16, 875, DateTimeKind.Local).AddTicks(6282), "Mama" }
+                    { 1, "public", "Hi Zoey. I'll see you later.", new DateTime(2024, 8, 18, 4, 42, 35, 789, DateTimeKind.Local).AddTicks(2609), "Mama" },
+                    { 2, "public", "Hi mama, our class is about to finish.", new DateTime(2024, 8, 18, 4, 43, 35, 789, DateTimeKind.Local).AddTicks(2622), "Zoey" },
+                    { 3, "public", "I am driving home.", new DateTime(2024, 8, 18, 4, 44, 35, 789, DateTimeKind.Local).AddTicks(2623), "Papa" },
+                    { 4, "public", "Zoey, are you there?", new DateTime(2024, 8, 18, 4, 46, 35, 789, DateTimeKind.Local).AddTicks(2624), "Mama" }
                 });
 
             migrationBuilder.InsertData(
@@ -81,6 +96,9 @@ namespace ChatOperaMini.Migrations
         {
             migrationBuilder.DropTable(
                 name: "MessageReads");
+
+            migrationBuilder.DropTable(
+                name: "PushSubscriptions");
 
             migrationBuilder.DropTable(
                 name: "Messages");
