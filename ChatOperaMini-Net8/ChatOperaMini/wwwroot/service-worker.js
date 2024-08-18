@@ -1,8 +1,10 @@
 ﻿const CACHE_NAME = 'mariteschat-cache-v1';
 const urlsToCache = [
     '/',
+    '/images/icons/icon-72x72.png',
     '/images/icons/icon-192x192.png',
-    '/images/icons/icon-512x512.png'
+    '/images/icons/icon-512x512.png',
+    '/images/icons/apple-touch-icon.png',
 ];
 
 // Install the service worker and cache assets
@@ -60,7 +62,7 @@ self.addEventListener('push', function (event) {
     const options = {
         body: data.message,
         icon: '/images/icons/icon-512x512.png',
-        badge: '/images/icons/icon-192x192.png',
+        badge: '/images/icons/icon-72x72.png',
         vibrate: [100, 50, 100],
         data: {
             url: data.url

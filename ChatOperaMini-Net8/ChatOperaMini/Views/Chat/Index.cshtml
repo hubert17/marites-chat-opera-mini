@@ -18,13 +18,22 @@
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
         <link rel="manifest" href="/manifest.json">
         <meta name="theme-color" content="#2196f3">
+        <link rel="icon" type="image/png" href="/images/icons/favicon.ico" />
+
+        <!-- iOS PWA Compatibility -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="MaritesChat">
+        <!-- Apple Touch Icons -->
+        <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+        <link rel="apple-touch-startup-image" href="/images/icons/icon-512x512.png">
 
         <script>
             const vapidPublicKey = '@ViewBag.VapidPublicKey';
             const senderSelf = '@Model.Sender';
             const channelCode = '@Model.ChannelCode'
         </script>
-        <script src="/push-manager.js?v=3"></script>
+        <script src="/push-manager.js?v=4"></script>
     }  
 
     <style>
@@ -131,6 +140,17 @@
 <body>
 
     <div id="chat-container">
+        @if (ViewBag.OperaMini == "0")
+        {
+            <!-- Push Notification Permission Request -->
+            <div id="notification-request" style="display: none;">
+                <p>Stay updated with the latest Marites!</p>
+                <button id="enable-notifications-button" class="button primary-button">
+                    Enable Notifications
+                </button>
+            </div>
+        }
+
         <form action="/chat/index?@operaMiniQs" method="post">
             @{
                 int i = -1;
