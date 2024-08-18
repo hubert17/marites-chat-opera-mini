@@ -25,9 +25,11 @@ public class ChatController : Controller
 
     public async Task<IActionResult> Index(string sender, string channelCode = "public", string operaMini = "0", int page = 1, int messageId = 0)
     {
+        ViewBag.OperaMini = IsOperaMiniBrowser() ? "1" : "0";
+
         if (string.IsNullOrWhiteSpace(sender))
         {
-            return RedirectToAction("Join");
+            return View("Join");
         }
 
         int pageSize = 5;
@@ -48,7 +50,6 @@ public class ChatController : Controller
         };
 
         ViewBag.MessageId = messageId;
-        ViewBag.OperaMini = operaMini != "0" || IsOperaMiniBrowser() ? "1" : "0";
         ViewBag.VapidPublicKey = _configuration["VapidKeys:PublicKey"];
 
         return View(messageVM);
@@ -81,19 +82,20 @@ public class ChatController : Controller
             await _hub.Clients.All.SendAsync("ReceiveMessage", message.Sender, message.MessageText, message.Id, message.SendDate.ToManilaTime().ToString("M-d-yy h:mmtt"));
 
             // Trigger Push Notification
-            var subscriptions = _db.PushSubscriptions.ToList();
+            var subscriptions = _db.PushSubscriptions.Where(x => x.ChannelCode == message.ChannelCode && x.Sender != message.Sender).ToList();
 
             var payload = new PushNotificationPayload
             {
-                Title = $"New Message from {message.Sender}",
-                Message = message.MessageText,
-                Url = $"/#u{message.Id}"
+                sender = message.Sender,
+                title = $"New Message from {message.Sender}",
+                message = message.MessageText,
+                url = "/chat/join"
             };
-
-            var payloadJson = JsonSerializer.Serialize(payload);
 
             foreach (var subscription in subscriptions)
             {
+                payload.url = $"/?sender={subscription.Sender}&channelCode={message.ChannelCode}";
+                var payloadJson = JsonSerializer.Serialize(payload);
                 _notificationService.SendPushNotification(subscription.Endpoint, subscription.P256DH, subscription.Auth, payloadJson);
             }
         }
@@ -130,19 +132,29 @@ public class ChatController : Controller
     }
 
     [HttpPost]
-    public IActionResult Subscribe([FromBody] PushSubscriptionPayload subscriptionPayload)
+    public async Task<IActionResult> Subscribe([FromBody] PushSubscription subscriptionPayload)
     {
-        var subscription = new PushSubscription
+        var existingSubscription = await _db.PushSubscriptions
+            .FirstOrDefaultAsync(s => s.Endpoint == subscriptionPayload.Endpoint 
+            && s.Sender == subscriptionPayload.Sender 
+            && s.ChannelCode == subscriptionPayload.ChannelCode);
+
+        if (existingSubscription == null)
+            _db.PushSubscriptions.Add(subscriptionPayload);
+        else
         {
-            Endpoint = subscriptionPayload.endpoint,
-            P256DH = subscriptionPayload.keys.p256dh,
-            Auth = subscriptionPayload.keys.auth
-        };
-        _db.PushSubscriptions.Add(subscription);
-        _db.SaveChanges();
+            // Optionally update the existing subscription if keys have changed
+            existingSubscription.P256DH = subscriptionPayload.P256DH;
+            existingSubscription.Auth = subscriptionPayload.Auth;
+            _db.Entry(existingSubscription).State = EntityState.Modified;
+        }
+
+        await _db.SaveChangesAsync();
 
         return Ok();
     }
+
+
     private bool IsOperaMiniBrowser()
     {
         var userAgent = Request.Headers["User-Agent"].ToString();

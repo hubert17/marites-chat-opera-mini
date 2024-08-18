@@ -1,5 +1,6 @@
 ﻿namespace ChatOperaMini;
 using Microsoft.Extensions.Configuration;
+using System.ComponentModel.DataAnnotations;
 using WebPush;
 
 public class NotificationService
@@ -39,10 +40,10 @@ public class NotificationService
 public class PushSubscription
 {
     public int Id { get; set; }
+    public string Sender { get; set; }
+    public string ChannelCode { get; set; }
     public string Endpoint { get; set; }
-
     public string P256DH { get; set; }
-
     public string Auth { get; set; }
 }
 public class PushSubscriptionPayload
@@ -59,7 +60,10 @@ public class PushSubscriptionPayload
 
 public class PushNotificationPayload
 {
-    public string Title { get; set; }
-    public string Message { get; set; }
-    public string Url { get; set; }
+    public string title { get; set; }
+    public string message { get; set; }
+    public string url { get; set; }
+    public string icon { get; set; } = @"/images/icons/icon-192x192.png";
+    public string click_action { get; set; }
+    public string sender { get; set; }
 }

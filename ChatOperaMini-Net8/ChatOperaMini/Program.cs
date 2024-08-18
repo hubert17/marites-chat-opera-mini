@@ -41,14 +41,12 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Chat}/{action=Index}/{id?}");
+    pattern: "{controller=Chat}/{action=Index}");
 
 app.MapControllerRoute(
     name: "custom",
     pattern: "{sender}/{channelCode=public}/{operaMini=0}",
     defaults: new { controller = "Chat", action = "Index" });
-
-
 
 app.MapHub<ChatHub>("/chathub");
 

@@ -15,7 +15,16 @@
 
     @if (ViewBag.OperaMini == "0")
     {
-        <partial name="_PwaPartial" />
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+        <link rel="manifest" href="/manifest.json">
+        <meta name="theme-color" content="#2196f3">
+
+        <script>
+            const vapidPublicKey = '@ViewBag.VapidPublicKey';
+            const senderSelf = '@Model.Sender';
+            const channelCode = '@Model.ChannelCode'
+        </script>
+        <script src="/push-manager.js?v=3"></script>
     }  
 
     <style>
@@ -197,7 +206,6 @@
         <a href="/" id="leave-button" class="button error-button" style="margin-top:15px;">Leave Channel [@Model.ChannelCode]</a>
     </div>
 
-
     @if (ViewBag.MessageId != null && ViewBag.MessageId != 0)
     {
         <script>
@@ -206,9 +214,10 @@
             });
         </script>
     }
+
     @if (ViewBag.OperaMini == "0")
     {
-        <partial name="_NotifPartial" />
+        <partial name="_SignalrPartial" />
     }
 
 </body>

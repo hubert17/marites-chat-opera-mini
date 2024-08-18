@@ -52,7 +52,7 @@ namespace ChatOperaMini.Migrations
                             Id = 1,
                             ChannelCode = "public",
                             MessageText = "Hi Zoey. I'll see you later.",
-                            SendDate = new DateTime(2024, 8, 18, 4, 42, 35, 789, DateTimeKind.Local).AddTicks(2609),
+                            SendDate = new DateTime(2024, 8, 18, 21, 59, 32, 961, DateTimeKind.Local).AddTicks(8283),
                             Sender = "Mama"
                         },
                         new
@@ -60,7 +60,7 @@ namespace ChatOperaMini.Migrations
                             Id = 2,
                             ChannelCode = "public",
                             MessageText = "Hi mama, our class is about to finish.",
-                            SendDate = new DateTime(2024, 8, 18, 4, 43, 35, 789, DateTimeKind.Local).AddTicks(2622),
+                            SendDate = new DateTime(2024, 8, 18, 22, 0, 32, 961, DateTimeKind.Local).AddTicks(8296),
                             Sender = "Zoey"
                         },
                         new
@@ -68,7 +68,7 @@ namespace ChatOperaMini.Migrations
                             Id = 3,
                             ChannelCode = "public",
                             MessageText = "I am driving home.",
-                            SendDate = new DateTime(2024, 8, 18, 4, 44, 35, 789, DateTimeKind.Local).AddTicks(2623),
+                            SendDate = new DateTime(2024, 8, 18, 22, 1, 32, 961, DateTimeKind.Local).AddTicks(8297),
                             Sender = "Papa"
                         },
                         new
@@ -76,7 +76,7 @@ namespace ChatOperaMini.Migrations
                             Id = 4,
                             ChannelCode = "public",
                             MessageText = "Zoey, are you there?",
-                            SendDate = new DateTime(2024, 8, 18, 4, 46, 35, 789, DateTimeKind.Local).AddTicks(2624),
+                            SendDate = new DateTime(2024, 8, 18, 22, 3, 32, 961, DateTimeKind.Local).AddTicks(8298),
                             Sender = "Mama"
                         });
                 });
@@ -132,10 +132,16 @@ namespace ChatOperaMini.Migrations
                     b.Property<string>("Auth")
                         .HasColumnType("longchar");
 
+                    b.Property<string>("ChannelCode")
+                        .HasColumnType("longchar");
+
                     b.Property<string>("Endpoint")
                         .HasColumnType("longchar");
 
                     b.Property<string>("P256DH")
+                        .HasColumnType("longchar");
+
+                    b.Property<string>("Sender")
                         .HasColumnType("longchar");
 
                     b.HasKey("Id");

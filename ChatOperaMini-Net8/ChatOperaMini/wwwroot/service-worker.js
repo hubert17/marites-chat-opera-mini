@@ -51,10 +51,17 @@ self.addEventListener('fetch', event => {
 // Handle push events
 self.addEventListener('push', function (event) {
     const data = event.data.json();
+
+    //// Assuming the current user's identifier is available in the data
+    //if (data.sender.toLowerCase() === senderSelf.toLowerCase()) {
+    //    return; // Do nothing if the notification is for the sender
+    //}
+
     const options = {
         body: data.message,
-        icon: '/images/icons/icon-192x192.png',
+        icon: '/images/icons/icon-512x512.png',
         badge: '/images/icons/icon-192x192.png',
+        vibrate: [100, 50, 100],
         data: {
             url: data.url
         }

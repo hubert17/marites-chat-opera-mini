@@ -35,6 +35,8 @@ namespace ChatOperaMini.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Jet:Identity", "1, 1"),
+                    Sender = table.Column<string>(type: "longchar", nullable: true),
+                    ChannelCode = table.Column<string>(type: "longchar", nullable: true),
                     Endpoint = table.Column<string>(type: "longchar", nullable: true),
                     P256DH = table.Column<string>(type: "longchar", nullable: true),
                     Auth = table.Column<string>(type: "longchar", nullable: true)
@@ -69,10 +71,10 @@ namespace ChatOperaMini.Migrations
                 columns: new[] { "Id", "ChannelCode", "MessageText", "SendDate", "Sender" },
                 values: new object[,]
                 {
-                    { 1, "public", "Hi Zoey. I'll see you later.", new DateTime(2024, 8, 18, 4, 42, 35, 789, DateTimeKind.Local).AddTicks(2609), "Mama" },
-                    { 2, "public", "Hi mama, our class is about to finish.", new DateTime(2024, 8, 18, 4, 43, 35, 789, DateTimeKind.Local).AddTicks(2622), "Zoey" },
-                    { 3, "public", "I am driving home.", new DateTime(2024, 8, 18, 4, 44, 35, 789, DateTimeKind.Local).AddTicks(2623), "Papa" },
-                    { 4, "public", "Zoey, are you there?", new DateTime(2024, 8, 18, 4, 46, 35, 789, DateTimeKind.Local).AddTicks(2624), "Mama" }
+                    { 1, "public", "Hi Zoey. I'll see you later.", new DateTime(2024, 8, 18, 21, 59, 32, 961, DateTimeKind.Local).AddTicks(8283), "Mama" },
+                    { 2, "public", "Hi mama, our class is about to finish.", new DateTime(2024, 8, 18, 22, 0, 32, 961, DateTimeKind.Local).AddTicks(8296), "Zoey" },
+                    { 3, "public", "I am driving home.", new DateTime(2024, 8, 18, 22, 1, 32, 961, DateTimeKind.Local).AddTicks(8297), "Papa" },
+                    { 4, "public", "Zoey, are you there?", new DateTime(2024, 8, 18, 22, 3, 32, 961, DateTimeKind.Local).AddTicks(8298), "Mama" }
                 });
 
             migrationBuilder.InsertData(
