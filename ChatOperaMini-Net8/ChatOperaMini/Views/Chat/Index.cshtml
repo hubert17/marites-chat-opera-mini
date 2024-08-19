@@ -33,7 +33,7 @@
             const senderSelf = '@Model.Sender';
             const channelCode = '@Model.ChannelCode'
         </script>
-        <script src="/push-manager.js?v=4"></script>
+        <script src="/push-manager.js?v=7"></script>
     }  
 
     <style>
@@ -44,9 +44,8 @@
         }
 
         #chat-container {
-            background-color: #fff;
-            margin: 0 auto;
-            padding: 0px 5px 5px;
+            padding: 5px;
+            background-color: #ffffff;
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
@@ -70,6 +69,11 @@
             text-align: center;
             display: block;
             text-decoration: none;
+
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
         }
 
         .primary-button {
@@ -135,22 +139,68 @@
         }
     </style>
 
+    <style>
+        /* Container for the top section */
+        #top-container {
+            width: 100%;
+            background-color: #03a9f4; /* Background color for the top section */
+            padding: 10px;
+        }
+
+        #top-content {
+            display: flex;
+            justify-content: flex-end; /* Align everything to the right */
+            align-items: center;
+            gap: 10px; /* Space between elements */
+            padding-right: 20px;
+        }
+
+        /* Prompt message styling */
+        #prompt-message {
+            color: white;
+            margin: 0;
+            text-align: right; /* Align text to the right */
+        }
+
+        /* Container for buttons */
+        #action-buttons-container {
+            display: flex;
+            gap: 10px;
+        }
+
+
+
+        /* Main chat container */
+        #chat-container {
+
+        }
+
+    </style>
+
 </head>
 
 <body>
+    @if (ViewBag.OperaMini == "0")
+    {
+        <!-- Push Notification Permission Request -->
+        <div id="top-container">
+            <div id="top-content">
+                <p id="prompt-message" style="display: none;">
+                    Stay updated with the latest, Marites!
+                </p>
+                <div id="action-buttons-container">
+                    <button id="enable-notifications-button" class="button secondary-button" style="display: none;">
+                        Enable Notification
+                    </button>
+                    <button id="install-pwa-button" class="button primary-button" style="display: none;">
+                        Install App
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
 
     <div id="chat-container">
-        @if (ViewBag.OperaMini == "0")
-        {
-            <!-- Push Notification Permission Request -->
-            <div id="notification-request" style="display: none;">
-                <p>Stay updated with the latest Marites!</p>
-                <button id="enable-notifications-button" class="button primary-button">
-                    Enable Notifications
-                </button>
-            </div>
-        }
-
         <form action="/chat/index?@operaMiniQs" method="post">
             @{
                 int i = -1;
